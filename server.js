@@ -1,13 +1,36 @@
 const express = require('express');
 const http = require('http');
-const WebSocket = require('ws'); // <<<<<<<<<<<< THIS LINE IS NOW CORRECTED
+const WebSocket = require('ws');
 const cors = require('cors');
 
 const app = express();
 const port = 3000;
 
-// Use the simplest CORS configuration
-app.use(cors());
+// ======================== FINAL, EXPLICIT SECURITY CONFIGURATION ========================
+
+// This is our master "VIP list". It includes BOTH your websites.
+const allowedOrigins = [
+    'https://kstawa.pages.dev',          // The customer menu site
+    'https://order-notifications.pages.dev' // The notification dashboard site
+];
+
+// Configure CORS for standard HTTP requests (like placing an order)
+const corsOptions = {
+    origin: function (origin, callback) {
+        // Allow requests if their origin is in our VIP list
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            // Block requests from any other website
+            callback(new Error('This origin is not allowed by CORS'));
+        }
+    }
+};
+
+// Apply these security rules to the server
+app.use(cors(corsOptions));
+
+// =======================================================================================
 
 // Standard server setup
 app.use(express.json());
