@@ -4,29 +4,28 @@ const WebSocket = require('ws');
 const cors = require('cors');
 
 const app = express();
-const port = 3000;
 
-// ================= THE DEFINITIVE, MANUAL CORS FIX =================
-// This custom middleware runs on EVERY request and manually adds the
-// "permission slip" headers that the browser needs to see.
+// ======================= THE DEFINITIVE TIMEOUT FIX =======================
+// This tells the server to use the port Render assigns, or fall back to 3000 for local testing.
+const port = process.env.PORT || 3000;
+// ========================================================================
+
+
+// Manually handle CORS to be as robust as possible
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     next();
 });
-// =====================================================================
 
 // Standard server setup
 app.use(express.json());
 
-// ================= THE DEFINITIVE TIMEOUT FIX =================
-// This is the "Health Check" route. Render will visit this path to
-// confirm the server is running correctly.
+// Health Check route
 app.get('/', (req, res) => {
     res.status(200).send('Server is alive and running!');
 });
-// ================================================================
 
 // ======================== WEBSOCKET SERVER SETUP ========================
 const server = http.createServer(app);
@@ -64,5 +63,6 @@ app.post('/api/order', (req, res) => {
 
 // --- Start the Combined Server ---
 server.listen(port, () => {
+    // This will now log the correct port number Render is using.
     console.log(`✅ Backend HTTP & WebSocket server is running on port ${port}`);
 });
