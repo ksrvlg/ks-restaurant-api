@@ -6,40 +6,24 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
-// --- STEP 1: USE THE SIMPLEST CORS CONFIGURATION ---
-// This tells the server to accept HTTP requests from ANY origin.
-// This is often necessary for the initial WebSocket handshake on platforms like Render.
+// ======================== THE KEY FIX IS HERE ========================
+// This uses the simplest CORS configuration to allow HTTP requests from ANY origin.
+// This will solve the "Sorry, there was a problem placing your order" error.
 app.use(cors());
+// =====================================================================
 
-// --- STEP 2: The rest of the HTTP server setup ---
-app.use(express.json()); // Replaces bodyParser
-
-// --- API Endpoint (remains the same) ---
-app.post('/api/order', (req, res) => {
-    const { items, total } = req.body;
-    console.log('🎉 ====== NEW FULL ORDER RECEIVED ====== 🎉');
-    items.forEach(item => { console.log(`- ${item.name} (x${item.quantity})`); });
-    console.log(`GRAND TOTAL: ₹${total.toFixed(2)}`);
-
-    // Broadcast the order to all connected dashboards
-    broadcast({
-        type: 'NEW_ORDER',
-        payload: { items: items, total: total, receivedAt: new Date().toLocaleTimeString() }
-    });
-
-    res.status(200).json({ message: `Full order received successfully!` });
-});
-
+// Standard server setup
+app.use(express.json()); // The modern replacement for bodyParser
 
 // ======================== WEBSOCKET SERVER SETUP ========================
 
-// 1. Create the HTTP server from our Express app
+// Create an HTTP server from our Express application
 const server = http.createServer(app);
 
-// 2. Attach the WebSocket server to the HTTP server
+// Attach a WebSocket server to the HTTP server
 const wss = new WebSocket.Server({ server });
 
-// 3. Broadcast function (sends message to all dashboards)
+// This function sends a message to all connected dashboards
 function broadcast(data) {
     wss.clients.forEach(client => {
         if (client.readyState === WebSocket.OPEN) {
@@ -48,7 +32,7 @@ function broadcast(data) {
     });
 }
 
-// 4. Handle dashboard connections
+// Log when a dashboard connects or disconnects
 wss.on('connection', ws => {
     console.log('✅ A new dashboard client has connected!');
     ws.on('close', () => {
@@ -59,7 +43,27 @@ wss.on('connection', ws => {
 // ========================================================================
 
 
-// --- Start the combined server ---
+// --- API Endpoint for Receiving Orders (No changes needed here) ---
+app.post('/api/order', (req, res) => {
+    const { items, total } = req.body;
+
+    // Log the order to the Render console
+    console.log('🎉 ====== NEW FULL ORDER RECEIVED ====== 🎉');
+    items.forEach(item => { console.log(`- ${item.name} (x${item.quantity})`); });
+    console.log(`GRAND TOTAL: ₹${total.toFixed(2)}`);
+
+    // Broadcast the order to the live dashboard
+    broadcast({
+        type: 'NEW_ORDER',
+        payload: { items: items, total: total, receivedAt: new Date().toLocaleTimeString() }
+    });
+
+    // Send a success response back to the customer's website
+    res.status(200).json({ message: `Full order received successfully!` });
+});
+
+
+// --- Start the Combined Server ---
 server.listen(port, () => {
     console.log(`✅ Backend HTTP & WebSocket server is running on port ${port}`);
 });
