@@ -9,7 +9,6 @@ const port = 3000;
 // ================= THE DEFINITIVE, MANUAL CORS FIX =================
 // This custom middleware runs on EVERY request and manually adds the
 // "permission slip" headers that the browser needs to see.
-// This bypasses any library or environment issues.
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -21,10 +20,13 @@ app.use((req, res, next) => {
 // Standard server setup
 app.use(express.json());
 
-// Health Check route to prevent Render timeouts
+// ================= THE DEFINITIVE TIMEOUT FIX =================
+// This is the "Health Check" route. Render will visit this path to
+// confirm the server is running correctly.
 app.get('/', (req, res) => {
     res.status(200).send('Server is alive and running!');
 });
+// ================================================================
 
 // ======================== WEBSOCKET SERVER SETUP ========================
 const server = http.createServer(app);
