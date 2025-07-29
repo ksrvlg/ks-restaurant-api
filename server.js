@@ -5,24 +5,28 @@ const cors = require('cors');
 
 const app = express();
 
-// ======================= THE DEFINITIVE TIMEOUT FIX =======================
-// This tells the server to use the port Render assigns, or fall back to 3000 for local testing.
+// ======================= THE DEFINITIVE PORT & TIMEOUT FIX =======================
+// This tells the server to use the port Render assigns (like 10000),
+// or fall back to 3000 for local testing. THIS SOLVES THE TIMEOUT.
 const port = process.env.PORT || 3000;
-// ========================================================================
+// =================================================================================
 
 
-// Manually handle CORS to be as robust as possible
+// ======================= THE DEFINITIVE CORS FIX =======================
+// This manually adds the "permission slip" to every request.
+// It is the most robust way to solve the CORS error.
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     next();
 });
+// =====================================================================
 
 // Standard server setup
 app.use(express.json());
 
-// Health Check route
+// Health Check route that Render's health checker will use.
 app.get('/', (req, res) => {
     res.status(200).send('Server is alive and running!');
 });
