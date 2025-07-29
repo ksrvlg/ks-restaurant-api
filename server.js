@@ -6,28 +6,31 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
-// ======================== FINAL, EXPLICIT SECURITY CONFIGURATION ========================
+// ======================== FINAL, ROBUST SECURITY CONFIGURATION ========================
 
-// This is our master "VIP list". It includes BOTH your websites.
+// This is our master "VIP list" for all connections.
 const allowedOrigins = [
-    'https://kstawa.pages.dev',          // The customer menu site
-    'https://order-notifications.pages.dev' // The notification dashboard site
+    'https://kstawa.pages.dev',
+    'https://order-notifications.pages.dev'
 ];
 
-// Configure CORS for standard HTTP requests (like placing an order)
 const corsOptions = {
     origin: function (origin, callback) {
-        // Allow requests if their origin is in our VIP list
-        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        // Allow requests if their origin is in our VIP list (or if they have no origin)
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
-            // Block requests from any other website
             callback(new Error('This origin is not allowed by CORS'));
         }
     }
 };
 
-// Apply these security rules to the server
+// --- THIS IS THE CRITICAL FIX for the "preflight" error ---
+// This tells the server to correctly handle the browser's permission check (the OPTIONS request)
+// before any other request.
+app.options('*', cors(corsOptions));
+
+// This applies the security rules to all other requests (like POST for orders).
 app.use(cors(corsOptions));
 
 // =======================================================================================
@@ -54,9 +57,6 @@ function broadcast(data) {
 
 wss.on('connection', ws => {
     console.log('✅ A new dashboard client has connected!');
-    ws.on('close', () => {
-        console.log('A dashboard client has disconnected.');
-    });
 });
 // ========================================================================
 
