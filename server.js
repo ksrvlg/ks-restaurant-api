@@ -1,37 +1,24 @@
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
-const cors = require('cors');
+// We still need the cors package installed, but we will handle the headers manually.
 
 const app = express();
 const port = 3000;
 
-// ======================== FINAL, ROBUST SECURITY CONFIGURATION ========================
+// ======================== THE FINAL, MANUAL CORS FIX ========================
+// This is a custom "middleware". It will run on EVERY request that comes to the server.
+app.use((req, res, next) => {
+    // This header is the "permission slip". The '*' means "allow any website to connect".
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    
+    // These headers are required for the browser's "preflight" permission check.
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 
-// This is our master "VIP list" for all connections.
-const allowedOrigins = [
-    'https://kstawa.pages.dev',
-    'https://order-notifications.pages.dev',
-    'https://orede-receive.pages.dev' // Adding your latest dashboard URL just in case
-];
-
-const corsOptions = {
-    origin: function (origin, callback) {
-        // Allow requests if their origin is in our VIP list (or if they have no origin)
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error('This origin is not allowed by CORS'));
-        }
-    }
-};
-
-// --- THIS IS THE CRITICAL FIX ---
-// The problematic line `app.options('*', ...)` has been removed.
-// This single `app.use` line is the standard way to handle CORS and will
-// automatically manage the preflight check in a compatible way.
-app.use(cors(corsOptions));
-
+    // This tells the request to continue to the next part of our server code.
+    next();
+});
 // =======================================================================================
 
 // Standard server setup
