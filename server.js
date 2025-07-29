@@ -5,18 +5,41 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
-app.use(cors()); 
+// --- Configure CORS to create a "VIP List" ---
+// This list contains the URLs that are allowed to make requests.
+const whitelist = ['https://kstawa.pages.dev']; // Your live frontend URL
+const corsOptions = {
+    origin: function (origin, callback) {
+        // We allow requests from URLs in our whitelist.
+        // We also allow requests that have no 'origin' (like from Postman or other tools).
+        if (whitelist.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            // Otherwise, we block the request.
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
+};
+
+// --- Use the new configuration ---
+app.use(cors(corsOptions)); 
 app.use(bodyParser.json());
 
+// UPDATED Endpoint to handle a full cart
 app.post('/api/order', (req, res) => {
-    const { itemName, itemPrice } = req.body;
+    const { items, total } = req.body;
 
-    console.log('🎉 ====== NEW ORDER ====== 🎉');
-    console.log(`Item Name: ${itemName}`);
-    console.log(`Price:     ${itemPrice}`);
-    console.log('===========================');
+    console.log('🎉 ====== NEW FULL ORDER RECEIVED ====== 🎉');
+    
+    items.forEach(item => {
+        console.log(`- ${item.name} (x${item.quantity}) - Price: ₹${item.price * item.quantity}`);
+    });
 
-    res.status(200).json({ message: `Order for ${itemName} received!` });
+    console.log('-----------------------------------------');
+    console.log(`GRAND TOTAL: ₹${total.toFixed(2)}`);
+    console.log('=========================================');
+
+    res.status(200).json({ message: `Full order received successfully!` });
 });
 
 app.listen(port, () => {
