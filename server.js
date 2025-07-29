@@ -1,6 +1,6 @@
 const express = require('express');
 const http = require('http');
-const WebSocket = 'ws');
+const WebSocket = require('ws'); // <<<<<<<<<<<< THIS LINE IS NOW CORRECTED
 const cors = require('cors');
 
 const app = express();
@@ -12,15 +12,10 @@ app.use(cors());
 // Standard server setup
 app.use(express.json());
 
-
-// ======================= THE TIMEOUT FIX IS HERE =======================
-// This is the "Health Check" route. Render will visit this path.
-// When it does, we send a success message to let Render know our server is running.
+// Health Check route to prevent Render timeouts
 app.get('/', (req, res) => {
     res.status(200).send('Server is alive and running!');
 });
-// =====================================================================
-
 
 // ======================== WEBSOCKET SERVER SETUP ========================
 const server = http.createServer(app);
