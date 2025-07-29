@@ -6,10 +6,17 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
-// ======================= THE STABLE CONFIGURATION =======================
-// We are using the simplest possible cors setup.
-// This is the code that we know DOES NOT CRASH the server.
-app.use(cors());
+// ================= THE DEFINITIVE, MANUAL CORS FIX =================
+// This custom middleware runs on EVERY request and manually adds the
+// "permission slip" headers that the browser needs to see.
+// This bypasses any library or environment issues.
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+// =====================================================================
 
 // Standard server setup
 app.use(express.json());
@@ -18,8 +25,6 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.status(200).send('Server is alive and running!');
 });
-// =====================================================================
-
 
 // ======================== WEBSOCKET SERVER SETUP ========================
 const server = http.createServer(app);
