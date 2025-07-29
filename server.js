@@ -1,6 +1,6 @@
 const express = require('express');
 const http = require('http');
-const WebSocket = require('ws');
+const WebSocket = require('ws'); // <<<<<<<<<<<< THIS MISSING LINE IS NOW ADDED BACK
 const cors = require('cors');
 
 const app = express();
@@ -8,7 +8,7 @@ const port = 3000;
 
 // ======================== FINAL, ROBUST SECURITY CONFIGURATION ========================
 
-// This is our master "VIP list" for all connections.
+// Master "VIP list" for all connections.
 const allowedOrigins = [
     'https://kstawa.pages.dev',
     'https://order-notifications.pages.dev'
@@ -16,7 +16,6 @@ const allowedOrigins = [
 
 const corsOptions = {
     origin: function (origin, callback) {
-        // Allow requests if their origin is in our VIP list (or if they have no origin)
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
@@ -25,12 +24,10 @@ const corsOptions = {
     }
 };
 
-// --- THIS IS THE CRITICAL FIX for the "preflight" error ---
-// This tells the server to correctly handle the browser's permission check (the OPTIONS request)
-// before any other request.
+// CRITICAL FIX for the "preflight" error
 app.options('*', cors(corsOptions));
 
-// This applies the security rules to all other requests (like POST for orders).
+// Apply security rules to all other requests
 app.use(cors(corsOptions));
 
 // =======================================================================================
