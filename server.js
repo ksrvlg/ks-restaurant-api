@@ -1,30 +1,52 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const http = require('http'); // Import the built-in http module
-const WebSocket = require('ws'); // Import the WebSocket library
+const http = require('http');
+const WebSocket = require('ws');
 
 const app = express();
 const port = 3000;
 
-// --- CORS Configuration ---
-// This remains the same, for the customer menu website.
+// ======================== FINAL, COMBINED CORS CONFIGURATION ========================
+// This is our new VIP list that includes BOTH of your websites.
+const allowedOrigins = [
+    'https://kstawa.pages.dev',          // The customer menu
+    'https://order-notifications.pages.dev' // The notification dashboard
+];
+
 const corsOptions = {
-    origin: 'https://kstawa.pages.dev',
-    optionsSuccessStatus: 200
+    origin: function (origin, callback) {
+        // Allow requests if their origin is in our allowed list.
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('This origin is not allowed by CORS'));
+        }
+    }
 };
+
+// Use the new, more flexible CORS options for all HTTP requests.
 app.use(cors(corsOptions));
+// ===================================================================================
+
 app.use(bodyParser.json());
 
-// ======================== HTTP & WEBSOCKET SERVER SETUP ========================
-
-// 1. Create a standard HTTP server using the Express app
+// --- HTTP & WEBSOCKET SERVER SETUP ---
 const server = http.createServer(app);
 
-// 2. Create a WebSocket server and attach it to the HTTP server
-const wss = new WebSocket.Server({ server });
+// In the WebSocket server options, we also check the origin.
+const wss = new WebSocket.Server({
+    server,
+    verifyClient: (info, done) => {
+        // Check if the connection origin is in our allowed list.
+        if (allowedOrigins.indexOf(info.origin) !== -1) {
+            done(true);
+        } else {
+            done(false, 403, 'This origin is forbidden');
+        }
+    }
+});
 
-// 3. This function will send a message to ALL connected dashboards
 function broadcast(data) {
     wss.clients.forEach(client => {
         if (client.readyState === WebSocket.OPEN) {
@@ -33,7 +55,6 @@ function broadcast(data) {
     });
 }
 
-// 4. Log when a dashboard connects
 wss.on('connection', ws => {
     console.log('✅ A new dashboard client has connected!');
     ws.on('close', () => {
@@ -41,35 +62,22 @@ wss.on('connection', ws => {
     });
 });
 
-// ==============================================================================
-
-
-// --- Your existing API endpoint to RECEIVE orders ---
+// --- API Endpoint ---
 app.post('/api/order', (req, res) => {
     const { items, total } = req.body;
-
     console.log('🎉 ====== NEW FULL ORDER RECEIVED ====== 🎉');
-    items.forEach(item => {
-        console.log(`- ${item.name} (x${item.quantity})`);
-    });
+    items.forEach(item => { console.log(`- ${item.name} (x${item.quantity})`); });
     console.log(`GRAND TOTAL: ₹${total.toFixed(2)}`);
 
-    // --- CRITICAL NEW STEP ---
-    // After receiving an order, broadcast it to all connected dashboards
     broadcast({
         type: 'NEW_ORDER',
-        payload: {
-            items: items,
-            total: total,
-            receivedAt: new Date().toLocaleTimeString()
-        }
+        payload: { items: items, total: total, receivedAt: new Date().toLocaleTimeString() }
     });
 
     res.status(200).json({ message: `Full order received successfully!` });
 });
 
-// --- Start the combined server ---
-// Note we are using server.listen, not app.listen
+// --- Start Server ---
 server.listen(port, () => {
     console.log(`✅ Backend HTTP & WebSocket server is running on port ${port}`);
 });
