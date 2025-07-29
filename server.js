@@ -69,4 +69,4 @@ app.post('/api/order', (req, res) => {
 server.listen(port, () => {
     // This will now log the correct port number Render is using.
     console.log(`✅ Backend HTTP & WebSocket server is running on port ${port}`);
-});`
+});
