@@ -1,25 +1,27 @@
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
-// We still need the cors package installed, but we will handle the headers manually.
+const cors = require('cors');
 
 const app = express();
 const port = 3000;
 
-// ======================== THE FINAL, MANUAL CORS FIX ========================
-// This is a custom "middleware". It will run on EVERY request that comes to the server.
-app.use((req, res, next) => {
-    // This header is the "permission slip". The '*' means "allow any website to connect".
-    res.setHeader('Access-Control-Allow-Origin', '*');
+// ================= THE DEFINITIVE FIX: MANUALLY HANDLE THE PREFLIGHT REQUEST =================
+// This creates a specific route that ONLY handles the browser's initial "OPTIONS" permission check.
+// The '/*' means it will work for any path, including /api/order.
+app.options('/*', (req, res) => {
+    // Manually send the required "permission slip" headers.
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
     
-    // These headers are required for the browser's "preflight" permission check.
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-    // This tells the request to continue to the next part of our server code.
-    next();
+    // Send a 200 OK status to tell the browser the check was successful.
+    res.sendStatus(200);
 });
-// =======================================================================================
+// ==============================================================================================
+
+// Use the cors library for all OTHER requests (like the actual POST order)
+app.use(cors());
 
 // Standard server setup
 app.use(express.json());
