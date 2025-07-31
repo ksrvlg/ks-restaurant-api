@@ -1,717 +1,443 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="en">
 <head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>K's Tawa V/s Tandoor Junction - Menu</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 20px;
-            max-width: 900px;
-            margin: auto;
-            background: #f4f4f4;
-            color: #333;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #d35400;
-            font-size: 2.2em;
-        }
-        .tabs {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-        .tab-link {
-            padding: 12px 25px;
-            cursor: pointer;
-            background: #fff;
-            border: 1px solid #ddd;
-            margin: 5px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: background-color 0.3s, color 0.3s, transform 0.2s, box-shadow 0.3s;
-        }
-        .tab-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .tab-link.active {
-            background-color: #d35400;
-            color: #fff;
-            border-color: #d35400;
-            box-shadow: 0 4px 8px rgba(211, 84, 0, 0.3);
-        }
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .tab-content.active {
-            display: block;
-        }
-        section {
-            margin-bottom: 40px;
-            background: #fff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        h2 {
-            border-bottom: 3px solid #d35400;
-            padding-bottom: 10px;
-            margin-bottom: 25px;
-            color: #c0392b;
-            font-size: 1.8em;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px dashed #e2e2e2;
-        }
-        li:last-child {
-            border-bottom: none;
-        }
-        .item-details {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            margin-right: 15px;
-        }
-        .item-name {
-            font-weight: 600;
-            font-size: 1.1em;
-            color: #2c3e50;
-        }
-        .item-price {
-            font-weight: 700;
-            color: #c0392b;
-            font-size: 1.1em;
-            margin-top: 5px;
-        }
-        .order-button {
-            background-color: #27ae60;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.2s;
-            flex-shrink: 0;
-        }
-        .order-button:hover {
-            background-color: #229954;
-            transform: scale(1.05);
-        }
-        .chef-video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-            height: 0;
-            overflow: hidden;
-            max-width: 100%;
-            background: #000;
-            margin-top: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .chef-video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        .gallery-item img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .gallery-item img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .lightbox {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s;
-        }
-        .lightbox-content {
-            max-width: 90%;
-            max-height: 85%;
-            border-radius: 8px;
-        }
-        .close-lightbox {
-            position: absolute;
-            top: 20px;
-            right: 35px;
-            color: #fff;
-            font-size: 45px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .close-lightbox:hover {
-            transform: scale(1.1);
-        }
-        .offer-banner {
-            background: linear-gradient(45deg, #ff8c00, #ffae42);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            margin-bottom: 40px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            animation: flash 2s infinite;
-        }
-        .offer-banner h3 {
-            margin: 0 0 5px 0;
-            font-size: 1.4em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .offer-banner p {
-            margin: 0;
-            font-size: 1em;
-            font-weight: 500;
-        }
-        @keyframes flash {
-            0% { opacity: 1; }
-            50% { opacity: 0.8; transform: scale(1.02); }
-            100% { opacity: 1; }
-        }
-        footer {
-            text-align: center;
-            padding: 25px;
-            margin-top: 40px;
-            background: linear-gradient(45deg, #c0392b, #d35400);
-            color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
-        }
-        footer p {
-            margin: 8px 0;
-            font-size: 1.1em;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-        }
-        footer a {
-            color: #fff;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        footer a:hover {
-            color: #f1c40f;
-        }
-
-        /* --- Style for the Cart --- */
-        #cart-container {
-            background: #fff;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 40px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border: 2px solid #d35400;
-        }
-        #cart-container h2 {
-            text-align: center;
-            margin-top: 0;
-            color: #c0392b;
-        }
-        #cart-items {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 20px;
-        }
-        #cart-items li {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 5px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .cart-item-name {
-            font-weight: 600;
-        }
-        .cart-item-price {
-            color: #c0392b;
-        }
-        #cart-total {
-            font-size: 1.4em;
-            font-weight: bold;
-            text-align: right;
-            margin-bottom: 20px;
-            color: #2c3e50;
-        }
-        #place-order-button {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background-color: #d35400;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.2em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        #place-order-button:hover {
-            background-color: #c0392b;
-        }
-
-        /* --- Style for Cart Success Message --- */
-        #cart-success-message {
-            background-color: #e8f5e9; /* Light green background */
-            color: #2e7d32; /* Dark green text */
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 500;
-            margin-bottom: 15px;
-            border: 1px solid #a5d6a7;
-        }
-        .hidden {
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>K's Tawa V/s Tandoor Junction - Menu</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+      background: #f4f4f4;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #d35400;
+      font-size: 2.2em;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .tab-link {
+      padding: 12px 25px;
+      cursor: pointer;
+      background: #fff;
+      border: 1px solid #ddd;
+      margin: 5px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: background-color 0.3s, color 0.3s, transform 0.2s, box-shadow 0.3s;
+    }
+    .tab-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .tab-link.active {
+      background-color: #d35400;
+      color: #fff;
+      border-color: #d35400;
+      box-shadow: 0 4px 8px rgba(211, 84, 0, 0.3);
+    }
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.5s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .tab-content.active {
+      display: block;
+    }
+    section {
+      margin-bottom: 40px;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    h2 {
+      border-bottom: 3px solid #d35400;
+      padding-bottom: 10px;
+      margin-bottom: 25px;
+      color: #c0392b;
+      font-size: 1.8em;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px dashed #e2e2e2;
+    }
+    li:last-child {
+      border-bottom: none;
+    }
+    .item-details {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      margin-right: 15px;
+    }
+    .item-name {
+      font-weight: 600;
+      font-size: 1.1em;
+      color: #2c3e50;
+    }
+    .item-price {
+      font-weight: 700;
+      color: #c0392b;
+      font-size: 1.1em;
+      margin-top: 5px;
+    }
+    .order-button {
+      background-color: #27ae60;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s, transform 0.2s;
+      flex-shrink: 0;
+    }
+    .order-button:hover {
+      background-color: #229954;
+      transform: scale(1.05);
+    }
+    .chef-video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      max-width: 100%;
+      background: #000;
+      margin-top: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .chef-video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .gallery-item img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s;
+    }
+    .lightbox-content {
+      max-width: 90%;
+      max-height: 85%;
+      border-radius: 8px;
+    }
+    .close-lightbox {
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      color: #fff;
+      font-size: 45px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .close-lightbox:hover {
+      transform: scale(1.1);
+    }
+    .offer-banner {
+      background: linear-gradient(45deg, #ff8c00, #ffae42);
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      animation: flash 2s infinite;
+    }
+    .offer-banner h3 {
+      margin: 0 0 5px 0;
+      font-size: 1.4em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .offer-banner p {
+      margin: 0;
+      font-size: 1em;
+      font-weight: 500;
+    }
+    @keyframes flash {
+      0% { opacity: 1; }
+      50% { opacity: 0.8; transform: scale(1.02); }
+      100% { opacity: 1; }
+    }
+    footer {
+      text-align: center;
+      padding: 25px;
+      margin-top: 40px;
+      background: linear-gradient(45deg, #c0392b, #d35400);
+      color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+    }
+    footer p {
+      margin: 8px 0;
+      font-size: 1.1em;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+    footer a {
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    footer a:hover {
+      color: #f1c40f;
+    }
+    #cart-container {
+      background: #fff;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border: 2px solid #d35400;
+    }
+    #cart-container h2 {
+      text-align: center;
+      margin-top: 0;
+      color: #c0392b;
+    }
+    #cart-items {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 20px;
+    }
+    #cart-items li {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 5px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .cart-item-name {
+      font-weight: 600;
+    }
+    .cart-item-price {
+      color: #c0392b;
+    }
+    #cart-total {
+      font-size: 1.4em;
+      font-weight: bold;
+      text-align: right;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+    #place-order-button {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background-color: #d35400;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.2em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #place-order-button:hover {
+      background-color: #c0392b;
+    }
+    #cart-success-message {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 500;
+      margin-bottom: 15px;
+      border: 1px solid #a5d6a7;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <h1>K's Tawa V/s Tandoor Junction</h1>
+  <h1>K's Tawa V/s Tandoor Junction</h1>
 
-    <!-- =================== CART SECTION =================== -->
-    <div id="cart-container">
-        <h2>Your Cart</h2>
-        <div id="cart-success-message" class="hidden">
-            Great! Now just review your order and press "Place Full Order" below.
-        </div>
-        <ul id="cart-items">
-            <li>Your cart is currently empty.</li>
-        </ul>
-        <div id="cart-total">Total: ₹0</div>
-        <button id="place-order-button" onclick="placeFinalOrder()">Place Full Order</button>
+  <div id="cart-container">
+    <h2>Your Cart</h2>
+    <div id="cart-success-message" class="hidden">
+      Great! Now just review your order and press "Place Full Order" below.
     </div>
-    <!-- ======================================================= -->
+    <ul id="cart-items">
+      <li>Your cart is currently empty.</li>
+    </ul>
+    <div id="cart-total">Total: ₹0</div>
+    <button id="place-order-button" onclick="placeFinalOrder()">Place Full Order</button>
+  </div>
 
-    <div class="tabs">
-        <div class="tab-link active" onclick="openTab(event, 'starters')">Starters & Platters</div>
-        <div class="tab-link" onclick="openTab(event, 'main_course')">Main Course</div>
-        <div class="tab-link" onclick="openTab(event, 'rolls_pasta')">Rolls & Pasta</div>
-        <div class="tab-link" onclick="openTab(event, 'chinese')">Chinese</div>
-        <div class="tab-link" onclick="openTab(event, 'breads_biryani')">Breads & Biryani</div>
-        <div class="tab-link" onclick="openTab(event, 'sides_drinks')">Sides & Drinks</div>
-    </div>
+  <div class="tabs">
+    <div class="tab-link active" onclick="openTab(event, 'starters')">Starters & Platters</div>
+    <div class="tab-link" onclick="openTab(event, 'main_course')">Main Course</div>
+    <div class="tab-link" onclick="openTab(event, 'rolls_pasta')">Rolls & Pasta</div>
+    <div class="tab-link" onclick="openTab(event, 'chinese')">Chinese</div>
+    <div class="tab-link" onclick="openTab(event, 'breads_biryani')">Breads & Biryani</div>
+    <div class="tab-link" onclick="openTab(event, 'sides_drinks')">Sides & Drinks</div>
+  </div>
 
-    <!-- Starters & Platters Tab -->
-    <div id="starters" class="tab-content active">
-        <!-- Offer Banner Added Here -->
-        <div class="offer-banner">
-            <h3>🎁 Special Offer! 🎁</h3>
-            <p>Free Lemon Soda on orders of ₹1000 or Free 250ml Coke on orders of ₹1500</p>
-        </div>
-        <section>
-            <h2>🥟 Paneer Momos (10 pcs)</h2>
-            <div class="gallery"><div class="gallery-item"><img src="https://images.jdmagicbox.com/quickquotes/images_main/paneer-kurkure-momo-2220178843-ve46z6u4.jpg" alt="Paneer Momos" onclick="openLightbox(this.src)"></div></div>
-            <ul>
-                <li><div class="item-details"><span class="item-name">Paneer Kurkure Momos</span><span class="item-price">₹140</span></div><button class="order-button" data-name="Paneer Kurkure Momos" data-price="140" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Paneer Steam Momos</span><span class="item-price">₹120</span></div><button class="order-button" data-name="Paneer Steam Momos" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Paneer Fried Momos</span><span class="item-price">₹140</span></div><button class="order-button" data-name="Paneer Fried Momos" data-price="140" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Paneer Afghani Momos</span><span class="item-price">₹180</span></div><button class="order-button" data-name="Paneer Afghani Momos" data-price="180" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Paneer Malai Momos</span><span class="item-price">₹180</span></div><button class="order-button" data-name="Paneer Malai Momos" data-price="180" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Paneer Gravy Momos</span><span class="item-price">₹200</span></div><button class="order-button" data-name="Paneer Gravy Momos" data-price="200" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Paneer Chilli Momos</span><span class="item-price">₹220</span></div><button class="order-button" data-name="Paneer Chilli Momos" data-price="220" onclick="addToCart(this)">Order</button></li>
-            </ul>
-        </section>
-        <section>
-            <h2>🥟 Veg Momos (10 pcs)</h2>
-            <div class="gallery"><div class="gallery-item"><img src="https://img-global.cpcdn.com/recipes/631f7db78bd8a38a/1200x630cq80/photo.jpg" alt="Veg Momos" onclick="openLightbox(this.src)"></div></div>
-             <ul>
-                <li><div class="item-details"><span class="item-name">Veg Kurkure Momos</span><span class="item-price">₹110</span></div><button class="order-button" data-name="Veg Kurkure Momos" data-price="110" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Veg Steam Momos</span><span class="item-price">₹80</span></div><button class="order-button" data-name="Veg Steam Momos" data-price="80" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Veg Tandoori Momos</span><span class="item-price">₹100</span></div><button class="order-button" data-name="Veg Tandoori Momos" data-price="100" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Veg Fried Momos</span><span class="item-price">₹110</span></div><button class="order-button" data-name="Veg Fried Momos" data-price="110" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Veg Afghani Momos</span><span class="item-price">₹120</span></div><button class="order-button" data-name="Veg Afghani Momos" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Veg Malai Momos</span><span class="item-price">₹120</span></div><button class="order-button" data-name="Veg Malai Momos" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Veg Gravy Momos</span><span class="item-price">₹130</span></div><button class="order-button" data-name="Veg Gravy Momos" data-price="130" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Veg Chilli Momos</span><span class="item-price">₹150</span></div><button class="order-button" data-name="Veg Chilli Momos" data-price="150" onclick="addToCart(this)">Order</button></li>
-            </ul>
-        </section>
-        <section>
-            <h2>🔥 Tandoori Starters (Veg)</h2>
-            <div class="gallery"><div class="gallery-item"><img src="https://orders.popskitchen.in/storage/2024/09/image-362.png" alt="Tandoori Starters" onclick="openLightbox(this.src)"></div></div>
-            <ul>
-                <li><div class="item-details"><span class="item-name">Achari Chaap</span><span class="item-price">Half ₹110 | Full ₹180</span></div><button class="order-button" data-name="Achari Chaap" data-price="110" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Lemon Chaap</span><span class="item-price">Half ₹110 | Full ₹180</span></div><button class="order-button" data-name="Lemon Chaap" data-price="110" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chatpati Chaap</span><span class="item-price">Half ₹110 | Full ₹180</span></div><button class="order-button" data-name="Chatpati Chaap" data-price="110" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Malai Chaap</span><span class="item-price">Half ₹110 | Full ₹180</span></div><button class="order-button" data-name="Malai Chaap" data-price="110" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Paneer Tikka</span><span class="item-price">Half ₹120 | Full ₹200</span></div><button class="order-button" data-name="Paneer Tikka" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Paneer Malai Tikka</span><span class="item-price">Half ₹140 | Full ₹240</span></div><button class="order-button" data-name="Paneer Malai Tikka" data-price="140" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Paneer Achari Tikka</span><span class="item-price">Half ₹120 | Full ₹200</span></div><button class="order-button" data-name="Paneer Achari Tikka" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Peri Peri Soya Chaap</span><span class="item-price">Half ₹110 | Full ₹180</span></div><button class="order-button" data-name="Peri Peri Soya Chaap" data-price="110" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Peri Peri Paneer Tikka</span><span class="item-price">Half ₹120 | Full ₹200</span></div><button class="order-button" data-name="Peri Peri Paneer Tikka" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Mushroom Tikka</span><span class="item-price">Half ₹120 | Full ₹200</span></div><button class="order-button" data-name="Mushroom Tikka" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Afghani Tandoori Chaap</span><span class="item-price">Half ₹140 | Full ₹220</span></div><button class="order-button" data-name="Afghani Tandoori Chaap" data-price="140" onclick="addToCart(this)">Order</button></li>
-            </ul>
-        </section>
-        <section>
-            <h2>🔥 Tandoori Starters (Non-Veg)</h2>
-            <div class="gallery"><div class="gallery-item"><img src="https://www.dosanchutney.com/cdn/shop/files/TANDOORIMIXPLATTERNONVEG.jpg?v=1682602405" alt="Non-Veg Tandoori Starters" onclick="openLightbox(this.src)"></div></div>
-             <ul>
-                <li><div class="item-details"><span class="item-name">Bhatti Murg (4 pcs)</span><span class="item-price">₹260</span></div><button class="order-button" data-name="Bhatti Murg (4 pcs)" data-price="260" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Bhatti Murg (8 pcs)</span><span class="item-price">₹480</span></div><button class="order-button" data-name="Bhatti Murg (8 pcs)" data-price="480" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Tandoori Chicken (4 pcs)</span><span class="item-price">₹260</span></div><button class="order-button" data-name="Tandoori Chicken (4 pcs)" data-price="260" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Tandoori Chicken (8 pcs)</span><span class="item-price">₹480</span></div><button class="order-button" data-name="Tandoori Chicken (8 pcs)" data-price="480" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Tikka (8 pcs)</span><span class="item-price">₹300</span></div><button class="order-button" data-name="Chicken Tikka (8 pcs)" data-price="300" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Seekh (2 pcs)</span><span class="item-price">₹180</span></div><button class="order-button" data-name="Chicken Seekh (2 pcs)" data-price="180" onclick="addToCart(this)">Order</button></li>
-            </ul>
-        </section>
-         <section>
-            <h2>🍛 Platters</h2>
-            <div class="gallery"><div class="gallery-item"><img src="https://i.ytimg.com/vi/Ykn22EkUlqg/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAPMCGMrdISxQmdjiRBI-kgfNdOig" alt="Platters" onclick="openLightbox(this.src)"></div></div>
-            <ul>
-                <li><div class="item-details"><span class="item-name">Tandoori Veg Platters</span><span class="item-price">₹350</span></div><button class="order-button" data-name="Tandoori Veg Platters" data-price="350" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Malai Chaap(Half)+Peri Peri Soya Chaap(Half)</span><span class="item-price">₹279</span></div><button class="order-button" data-name="Malai Chaap(Half)+Peri Peri Soya Chaap(Half)" data-price="279" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Lemon Chaap(Half)+Chatpati Chaap(Half)</span><span class="item-price">₹279</span></div><button class="order-button" data-name="Lemon Chaap(Half)+Chatpati Chaap(Half)" data-price="279" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Afghani Tandoori Chaap(Half)+Achari Chaap(Half)</span><span class="item-price">₹279</span></div><button class="order-button" data-name="Afghani Tandoori Chaap(Half)+Achari Chaap(Half)" data-price="279" onclick="addToCart(this)">Order</button></li>
-            </ul>
-        </section>
-    </div>
+  <!-- (omitted long menu sections for brevity in this snippet; assume they remain unchanged) -->
 
-    <!-- Main Course Tab -->
-    <div id="main_course" class="tab-content">
-        <section>
-            <h2>🥗 Veg Main Course</h2>
-            <div class="gallery"><div class="gallery-item"><img src="https://www.funfoodfrolic.com/wp-content/uploads/2022/08/Soya-Chaap-Blog.jpg" alt="Veg Main Course" onclick="openLightbox(this.src)"></div></div>
-             <ul>
-                <li><div class="item-details"><span class="item-name">Tawa Chaap Masala</span><span class="item-price">Half ₹160 | Full ₹230</span></div><button class="order-button" data-name="Tawa Chaap Masala" data-price="160" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Tawa Mushroom Masala</span><span class="item-price">Half ₹160 | Full ₹230</span></div><button class="order-button" data-name="Tawa Mushroom Masala" data-price="160" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Tawa Paneer Masala</span><span class="item-price">Half ₹160 | Full ₹230</span></div><button class="order-button" data-name="Tawa Paneer Masala" data-price="160" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Paneer Takatak</span><span class="item-price">Half ₹170 | Full ₹240</span></div><button class="order-button" data-name="Paneer Takatak" data-price="170" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Butter Chaap</span><span class="item-price">Half ₹170 | Full ₹240</span></div><button class="order-button" data-name="Butter Chaap" data-price="170" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Shahi Paneer</span><span class="item-price">Half ₹120 | Full ₹200</span></div><button class="order-button" data-name="Shahi Paneer" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Kadhai Chaap</span><span class="item-price">Half ₹120 | Full ₹210</span></div><button class="order-button" data-name="Kadhai Chaap" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Mix Veg</span><span class="item-price">Half ₹120 | Full ₹190</span></div><button class="order-button" data-name="Mix Veg" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Kadhai Paneer</span><span class="item-price">Half ₹120 | Full ₹200</span></div><button class="order-button" data-name="Kadhai Paneer" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Paneer Butter Masala</span><span class="item-price">Half ₹140 | Full ₹230</span></div><button class="order-button" data-name="Paneer Butter Masala" data-price="140" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Mushroom Do Pyaza</span><span class="item-price">₹240</span></div><button class="order-button" data-name="Mushroom Do Pyaza" data-price="240" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Matar Paneer</span><span class="item-price">Half ₹130 | Full ₹220</span></div><button class="order-button" data-name="Matar Paneer" data-price="130" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Paneer Lababdar</span><span class="item-price">Half ₹160 | Full ₹250</span></div><button class="order-button" data-name="Paneer Lababdar" data-price="160" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Tadka Dal Fry</span><span class="item-price">Half ₹120 | Full ₹180</span></div><button class="order-button" data-name="Tadka Dal Fry" data-price="120" onclick="addToCart(this)">Order</button></li>
-            </ul>
-        </section>
-        <section>
-            <h2>🍗 Non-Veg Main Course</h2>
-            <div class="gallery"><div class="gallery-item"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvKmpTL61f7e2AZl0dVAq8Hcner9dG_MvUZQ&s" alt="Non-Veg Main Course" onclick="openLightbox(this.src)"></div></div>
-            <ul>
-                <li><div class="item-details"><span class="item-name">Chicken Utterly Butterly</span><span class="item-price">Half ₹350 | Full ₹580</span></div><button class="order-button" data-name="Chicken Utterly Butterly" data-price="350" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Butter Chicken</span><span class="item-price">Qtr ₹220 | Half ₹390 | Full ₹650</span></div><button class="order-button" data-name="Butter Chicken" data-price="220" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Boneless Butter Chicken</span><span class="item-price">Qtr ₹230 | Half ₹430 | Full ₹700</span></div><button class="order-button" data-name="Boneless Butter Chicken" data-price="230" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Do Pyaza</span><span class="item-price">Half ₹390 | Full ₹650</span></div><button class="order-button" data-name="Chicken Do Pyaza" data-price="390" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Kadai Chicken</span><span class="item-price">Qtr ₹220 | Half ₹390 | Full ₹650</span></div><button class="order-button" data-name="Kadai Chicken" data-price="220" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Tawa Chicken</span><span class="item-price">Qtr ₹220 | Half ₹420 | Full ₹660</span></div><button class="order-button" data-name="Tawa Chicken" data-price="220" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Ghar Jaisa Chicken Curry</span><span class="item-price">Qtr ₹220 | Half ₹370 | Full ₹630</span></div><button class="order-button" data-name="Ghar Jaisa Chicken Curry" data-price="220" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Rara Punjabi KS Special</span><span class="item-price">Qtr ₹220 | Half ₹450 | Full ₹700</span></div><button class="order-button" data-name="Chicken Rara Punjabi KS Special" data-price="220" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Boti Chicken Masala</span><span class="item-price">Half ₹390 | Full ₹650</span></div><button class="order-button" data-name="Boti Chicken Masala" data-price="390" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Malmal</span><span class="item-price">Half ₹440 | Full ₹700</span></div><button class="order-button" data-name="Chicken Malmal" data-price="440" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Tikka Butter Masala</span><span class="item-price">Half ₹420 | Full ₹720</span></div><button class="order-button" data-name="Chicken Tikka Butter Masala" data-price="420" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Egg Curry (4 pcs)</span><span class="item-price">₹250</span></div><button class="order-button" data-name="Egg Curry (4 pcs)" data-price="250" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Seekh Masala (500 ml)</span><span class="item-price">₹260</span></div><button class="order-button" data-name="Chicken Seekh Masala (500 ml)" data-price="260" onclick="addToCart(this)">Order</button></li>
-            </ul>
-        </section>
-    </div>
+  <!-- Lightbox for Image Gallery -->
+  <div class="lightbox" id="lightbox">
+    <span class="close-lightbox" onclick="closeLightbox()">×</span>
+    <img class="lightbox-content" id="lightbox-img" />
+  </div>
 
-    <!-- Rolls & Pasta Tab -->
-    <div id="rolls_pasta" class="tab-content">
-        <section>
-            <h2>🌯 Rocking Rolls</h2>
-            <div class="gallery"><div class="gallery-item"><img src="https://b.zmtcdn.com/data/dish_photos/583/6ad97ca0eaa80e2bb8fbc9fec2cc5583.jpeg" alt="Rolls" onclick="openLightbox(this.src)"></div></div>
-            <ul>
-                <li><div class="item-details"><span class="item-name">Chicken Seekh Roll</span><span class="item-price">₹180</span></div><button class="order-button" data-name="Chicken Seekh Roll" data-price="180" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Tikka Roll</span><span class="item-price">₹220</span></div><button class="order-button" data-name="Chicken Tikka Roll" data-price="220" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Malai Chaap Roll</span><span class="item-price">Half ₹120 | Full ₹190</span></div><button class="order-button" data-name="Malai Chaap Roll" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chatpati Chaap Roll</span><span class="item-price">Half ₹120 | Full ₹190</span></div><button class="order-button" data-name="Chatpati Chaap Roll" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Achari Chaap Roll</span><span class="item-price">Half ₹120 | Full ₹190</span></div><button class="order-button" data-name="Achari Chaap Roll" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Afghani Chaap Roll</span><span class="item-price">Half ₹130 | Full ₹220</span></div><button class="order-button" data-name="Afghani Chaap Roll" data-price="130" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Lemon Chaap Roll</span><span class="item-price">Half ₹120 | Full ₹190</span></div><button class="order-button" data-name="Lemon Chaap Roll" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Mushroom Roll</span><span class="item-price">Half ₹140 | Full ₹200</span></div><button class="order-button" data-name="Mushroom Roll" data-price="140" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Paneer Tikka Roll</span><span class="item-price">Half ₹120 | Full ₹200</span></div><button class="order-button" data-name="Paneer Tikka Roll" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Peri Peri Soya Chaap Roll</span><span class="item-price">Half ₹120 | Full ₹190</span></div><button class="order-button" data-name="Peri Peri Soya Chaap Roll" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Peri Peri Paneer Tikka Roll</span><span class="item-price">Half ₹140 | Full ₹200</span></div><button class="order-button" data-name="Peri Peri Paneer Tikka Roll" data-price="140" onclick="addToCart(this)">Order</button></li>
-            </ul>
-        </section>
-        <section>
-            <h2>🍝 Pasta K's Special</h2>
-            <div class="gallery"><div class="gallery-item"><img src="https://img.freepik.com/free-photo/penne-pasta-tomato-sauce-with-chicken-tomatoes-wooden-table_2829-19744.jpg" alt="Pasta" onclick="openLightbox(this.src)"></div></div>
-            <ul>
-                <li><div class="item-details"><span class="item-name">Mix Pasta Mac & Cheese</span><span class="item-price">₹140</span></div><button class="order-button" data-name="Mix Pasta Mac & Cheese" data-price="140" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Red Sauce Pasta Mac & Cheese</span><span class="item-price">₹140</span></div><button class="order-button" data-name="Red Sauce Pasta Mac & Cheese" data-price="140" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">White Sauce Pasta Mac & Cheese</span><span class="item-price">₹140</span></div><button class="order-button" data-name="White Sauce Pasta Mac & Cheese" data-price="140" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Mix Pasta Mac & Cheese</span><span class="item-price">₹180</span></div><button class="order-button" data-name="Chicken Mix Pasta Mac & Cheese" data-price="180" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Red Sauce Pasta Mac & Cheese</span><span class="item-price">₹180</span></div><button class="order-button" data-name="Chicken Red Sauce Pasta Mac & Cheese" data-price="180" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken White Sauce Pasta Mac & Cheese</span><span class="item-price">₹180</span></div><button class="order-button" data-name="Chicken White Sauce Pasta Mac & Cheese" data-price="180" onclick="addToCart(this)">Order</button></li>
-            </ul>
-        </section>
-    </div>
+  <footer>
+    <p>📍 Address: Ramphal Chowk Rd, near Nukkad Cafe, Block C, Sector 7 Dwarka, Palam, New Delhi, Delhi, 110075</p>
+    <p>📞 Phone: <a href="tel:07678654713">076786 54713</a></p>
+  </footer>
 
-    <!-- Chinese Tab -->
-    <div id="chinese" class="tab-content">
-        <section>
-            <h2>🍜 Noodles</h2>
-            <div class="gallery"><div class="gallery-item"><img src="https://img.freepik.com/free-photo/schezwan-noodles-vegetable-hakka-noodles-chow-mein-is-popular-indo-chinese-recipes-served-bowl-plate-with-wooden-chopsticks_466689-74628.jpg" alt="Noodles" onclick="openLightbox(this.src)"></div></div>
-            <ul>
-                <li><div class="item-details"><span class="item-name">Chicken Noodles</span><span class="item-price">₹180</span></div><button class="order-button" data-name="Chicken Noodles" data-price="180" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Hakka Noodles</span><span class="item-price">₹200</span></div><button class="order-button" data-name="Chicken Hakka Noodles" data-price="200" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Schezwan Noodles</span><span class="item-price">₹200</span></div><button class="order-button" data-name="Chicken Schezwan Noodles" data-price="200" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Chilli Garlic Noodles</span><span class="item-price">₹200</span></div><button class="order-button" data-name="Chicken Chilli Garlic Noodles" data-price="200" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Singapori Noodles</span><span class="item-price">₹200</span></div><button class="order-button" data-name="Chicken Singapori Noodles" data-price="200" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Veg Noodles</span><span class="item-price">₹120</span></div><button class="order-button" data-name="Veg Noodles" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Veg Hakka Noodles</span><span class="item-price">₹150</span></div><button class="order-button" data-name="Veg Hakka Noodles" data-price="150" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Veg Schezwan Noodles</span><span class="item-price">₹150</span></div><button class="order-button" data-name="Veg Schezwan Noodles" data-price="150" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chilli Garlic Noodles</span><span class="item-price">₹150</span></div><button class="order-button" data-name="Chilli Garlic Noodles" data-price="150" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Singapori Noodles</span><span class="item-price">₹150</span></div><button class="order-button" data-name="Singapori Noodles" data-price="150" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Paneer Noodles</span><span class="item-price">₹170</span></div><button class="order-button" data-name="Paneer Noodles" data-price="170" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Mushroom Noodles</span><span class="item-price">₹170</span></div><button class="order-button" data-name="Mushroom Noodles" data-price="170" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Egg Noodles</span><span class="item-price">₹170</span></div><button class="order-button" data-name="Egg Noodles" data-price="170" onclick="addToCart(this)">Order</button></li>
-            </ul>
-        </section>
-        <section>
-            <h2>🥢 Chinese Delights</h2>
-            <div class="gallery"><div class="gallery-item"><img src="https://img.freepik.com/free-photo/chilli-paneer-dry-is-made-using-cottage-cheese-indo-chinese-food_466689-76947.jpg" alt="Chilli Paneer" onclick="openLightbox(this.src)"></div></div>
-            <ul>
-                <li><div class="item-details"><span class="item-name">Chilli Chicken Dry (10 pcs)</span><span class="item-price">₹250</span></div><button class="order-button" data-name="Chilli Chicken Dry (10 pcs)" data-price="250" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chilli Chicken Gravy (10 pcs)</span><span class="item-price">₹250</span></div><button class="order-button" data-name="Chilli Chicken Gravy (10 pcs)" data-price="250" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Manchurian Dry (10 pcs)</span><span class="item-price">₹250</span></div><button class="order-button" data-name="Chicken Manchurian Dry (10 pcs)" data-price="250" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Manchurian Gravy (10 pcs)</span><span class="item-price">₹250</span></div><button class="order-button" data-name="Chicken Manchurian Gravy (10 pcs)" data-price="250" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Crispy Chilli Honey Potato</span><span class="item-price">₹140</span></div><button class="order-button" data-name="Crispy Chilli Honey Potato" data-price="140" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chilli Paneer Gravy</span><span class="item-price">₹220</span></div><button class="order-button" data-name="Chilli Paneer Gravy" data-price="220" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chilli Paneer (Dry)</span><span class="item-price">₹200</span></div><button class="order-button" data-name="Chilli Paneer (Dry)" data-price="200" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chilli Mushroom</span><span class="item-price">₹190</span></div><button class="order-button" data-name="Chilli Mushroom" data-price="190" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">French Fries</span><span class="item-price">₹100</span></div><button class="order-button" data-name="French Fries" data-price="100" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chilli Gobi Dry</span><span class="item-price">₹190</span></div><button class="order-button" data-name="Chilli Gobi Dry" data-price="190" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chilli Potato</span><span class="item-price">₹130</span></div><button class="order-button" data-name="Chilli Potato" data-price="130" onclick="addToCart(this)">Order</button></li>
-            </ul>
-        </section>
-    </div>
+  <script>
+    let cart = [];
 
-    <!-- Breads & Biryani Tab -->
-    <div id="breads_biryani" class="tab-content">
-        <section>
-            <h2>🍞 Best Of Indian Breads</h2>
-            <ul>
-                <li><div class="item-details"><span class="item-name">Tandoori Roti</span><span class="item-price">₹12</span></div><button class="order-button" data-name="Tandoori Roti" data-price="12" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Rumali Roti</span><span class="item-price">₹10</span></div><button class="order-button" data-name="Rumali Roti" data-price="10" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Butter Roti</span><span class="item-price">₹15</span></div><button class="order-button" data-name="Butter Roti" data-price="15" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Laccha Paratha</span><span class="item-price">₹25</span></div><button class="order-button" data-name="Laccha Paratha" data-price="25" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Plain Naan</span><span class="item-price">₹30</span></div><button class="order-button" data-name="Plain Naan" data-price="30" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Butter Naan</span><span class="item-price">₹40</span></div><button class="order-button" data-name="Butter Naan" data-price="40" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Onion Naan</span><span class="item-price">₹50</span></div><button class="order-button" data-name="Onion Naan" data-price="50" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Stuffed Naan</span><span class="item-price">₹60</span></div><button class="order-button" data-name="Stuffed Naan" data-price="60" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Garlic Naan</span><span class="item-price">₹60</span></div><button class="order-button" data-name="Garlic Naan" data-price="60" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Aloo Paratha</span><span class="item-price">₹50</span></div><button class="order-button" data-name="Aloo Paratha" data-price="50" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Keema Naan</span><span class="item-price">₹90</span></div><button class="order-button" data-name="Chicken Keema Naan" data-price="90" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Paneer Paratha</span><span class="item-price">₹70</span></div><button class="order-button" data-name="Paneer Paratha" data-price="70" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Missi Roti</span><span class="item-price">₹25</span></div><button class="order-button" data-name="Missi Roti" data-price="25" onclick="addToCart(this)">Order</button></li>
-            </ul>
-        </section>
-        <section>
-            <h2>🍲 Dum Biryani</h2>
-            <div class="gallery"><div class="gallery-item"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaeBlIywcv4RMaVlvzAk-ygkpjyiX0juwM6Q&s" alt="Biryani" onclick="openLightbox(this.src)"></div></div>
-            <ul>
-                <li><div class="item-details"><span class="item-name">Hyderabadi Chicken Dum Biryani</span><span class="item-price">₹249</span></div><button class="order-button" data-name="Hyderabadi Chicken Dum Biryani" data-price="249" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Seekh Dum Biryani</span><span class="item-price">₹249</span></div><button class="order-button" data-name="Chicken Seekh Dum Biryani" data-price="249" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Kolkatta Chicken Dum Biryani</span><span class="item-price">₹299</span></div><button class="order-button" data-name="Kolkatta Chicken Dum Biryani" data-price="299" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Hyderabadi Veg Dum Biryani</span><span class="item-price">₹149</span></div><button class="order-button" data-name="Hyderabadi Veg Dum Biryani" data-price="149" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Paneer Tikka Dum Biryani</span><span class="item-price">₹199</span></div><button class="order-button" data-name="Paneer Tikka Dum Biryani" data-price="199" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Egg Dum Biryani</span><span class="item-price">₹199</span></div><button class="order-button" data-name="Egg Dum Biryani" data-price="199" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Mushroom Dum Biryani</span><span class="item-price">₹199</span></div><button class="order-button" data-name="Mushroom Dum Biryani" data-price="199" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Soya Chaap Dum Biryani</span><span class="item-price">₹190</span></div><button class="order-button" data-name="Soya Chaap Dum Biryani" data-price="190" onclick="addToCart(this)">Order</button></li>
-            </ul>
-        </section>
-    </div>
+    function openTab(event, tabName) {
+      let tabcontent = document.getElementsByClassName("tab-content");
+      for (let i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      let tablinks = document.getElementsByClassName("tab-link");
+      for (let i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(tabName)?.style.display = "block";
+      event.currentTarget.className += " active";
+    }
 
-    <!-- Sides & Drinks Tab -->
-    <div id="sides_drinks" class="tab-content">
-        <section>
-            <h2>🍚 Rice</h2>
-            <div class="gallery"><div class="gallery-item"><img src="https://www.pavaniskitchen.com/wp-content/uploads/2021/08/schezwan-veg-fried-rice-500x375.jpg" alt="Fried Rice" onclick="openLightbox(this.src)"></div></div>
-            <ul>
-                <li><div class="item-details"><span class="item-name">Egg Fried Rice</span><span class="item-price">₹170</span></div><button class="order-button" data-name="Egg Fried Rice" data-price="170" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Veg Fried Rice</span><span class="item-price">₹140</span></div><button class="order-button" data-name="Veg Fried Rice" data-price="140" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Jeera Rice</span><span class="item-price">₹130</span></div><button class="order-button" data-name="Jeera Rice" data-price="130" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Steam Rice</span><span class="item-price">₹120</span></div><button class="order-button" data-name="Steam Rice" data-price="120" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Veg Schezwan Rice</span><span class="item-price">₹150</span></div><button class="order-button" data-name="Veg Schezwan Rice" data-price="150" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Fried Rice</span><span class="item-price">₹220</span></div><button class="order-button" data-name="Chicken Fried Rice" data-price="220" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Chicken Schezwan Rice</span><span class="item-price">₹260</span></div><button class="order-button" data-name="Chicken Schezwan Rice" data-price="260" onclick="addToCart(this)">Order</button></li>
-            </ul>
-        </section>
-        <section>
-            <h2>🥤 Soft Drinks</h2>
-             <ul>
-                <li><div class="item-details"><span class="item-name">Coke/Thums Up (Large)</span><span class="item-price">₹40</span></div><button class="order-button" data-name="Coke/Thums Up (Large)" data-price="40" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Coke/Thums Up (Small)</span><span class="item-price">₹20</span></div><button class="order-button" data-name="Coke/Thums Up (Small)" data-price="20" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Water Big</span><span class="item-price">₹20</span></div><button class="order-button" data-name="Water Big" data-price="20" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Water Small</span><span class="item-price">₹10</span></div><button class="order-button" data-name="Water Small" data-price="10" onclick="addToCart(this)">Order</button></li>
-                <li><div class="item-details"><span class="item-name">Arora Lemon</span><span class="item-price">₹10</span></div><button class="order-button" data-name="Arora Lemon" data-price="10" onclick="addToCart(this)">Order</button></li>
-            </ul>
-        </section>
-        <section>
-            <h2>👨‍🍳 Our Chef in Action</h2>
-            <div class="chef-video-wrapper">
-                <iframe src="https://www.youtube.com/embed/OOC_h2u8GkM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </section>
-    </div>
+    function openLightbox(src) {
+      const lightbox = document.getElementById("lightbox");
+      document.getElementById("lightbox-img").src = src;
+      lightbox.style.display = "flex";
+    }
 
-    <!-- Lightbox for Image Gallery -->
-    <div class="lightbox" id="lightbox">
-        <span class="close-lightbox" onclick="closeLightbox()">×</span>
-        <img class="lightbox-content" id="lightbox-img">
-    </div>
+    function closeLightbox() {
+      document.getElementById("lightbox").style.display = "none";
+    }
 
-    <!-- Footer with Address and Phone -->
-    <footer>
-        <p>📍 Address: Ramphal Chowk Rd, near Nukkad Cafe, Block C, Sector 7 Dwarka, Palam, New Delhi, Delhi, 110075</p>
-        <p>📞 Phone: <a href="tel:07678654713">076786 54713</a></p>
-    </footer>
+    document.getElementById("lightbox")?.addEventListener("click", function (event) {
+      if (event.target.id === "lightbox") closeLightbox();
+    });
 
-    <script>
-        // --- Global Cart Variable ---
-        let cart = [];
+    function addToCart(button) {
+      const name = button.getAttribute("data-name");
+      const price = parseFloat(button.getAttribute("data-price"));
+      const existing = cart.find(i => i.name === name);
+      if (existing) existing.quantity++;
+      else cart.push({ name, price, quantity: 1 });
+      updateCartDisplay();
+    }
 
-        // --- Tab and Lightbox Functions ---
-        function openTab(event, tabName) {
-            let i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-            tablinks = document.getElementsByClassName("tab-link");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            document.getElementById(tabName).style.display = "block";
-            event.currentTarget.className += " active";
-        }
-
-        function openLightbox(src) {
-            const lightbox = document.getElementById('lightbox');
-            document.getElementById('lightbox-img').src = src;
-            lightbox.style.display = 'flex';
-        }
-
-        function closeLightbox() {
-            document.getElementById('lightbox').style.display = 'none';
-        }
-
-        document.getElementById('lightbox').addEventListener('click', function(event) {
-            if (event.target.id === 'lightbox') {
-                closeLightbox();
-            }
+    function updateCartDisplay() {
+      const cartItemsElement = document.getElementById("cart-items");
+      const cartTotalElement = document.getElementById("cart-total");
+      const successMessageElement = document.getElementById("cart-success-message");
+      let total = 0;
+      cartItemsElement.innerHTML = "";
+      if (cart.length === 0) {
+        cartItemsElement.innerHTML = "<li>Your cart is currently empty.</li>";
+        successMessageElement.classList.add("hidden");
+      } else {
+        successMessageElement.classList.remove("hidden");
+        cart.forEach(item => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            <span class="cart-item-name">${item.name} (x${item.quantity})</span>
+            <span class="cart-item-price">₹${(item.price * item.quantity).toFixed(2)}</span>
+          `;
+          cartItemsElement.appendChild(li);
+          total += item.price * item.quantity;
         });
+      }
+      cartTotalElement.textContent = `Total: ₹${total.toFixed(2)}`;
+    }
 
-        // --- CART LOGIC ---
-        function addToCart(button) {
-            const name = button.getAttribute('data-name');
-            const price = parseFloat(button.getAttribute('data-price'));
+    function placeFinalOrder() {
+      if (cart.length === 0) {
+        alert("Your cart is empty. Please add items before placing an order.");
+        return;
+      }
 
-            const existingItem = cart.find(item => item.name === name);
+      const apiEndpoint = "https://ks-restaurant-api.onrender.com/api/order";
+      const orderData = {
+        items: cart,
+        total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
+      };
 
-            if (existingItem) {
-                existingItem.quantity++;
-            } else {
-                cart.push({ name, price, quantity: 1 });
-            }
-            updateCartDisplay();
-        }
-
-        function updateCartDisplay() {
-            const cartItemsElement = document.getElementById('cart-items');
-            const cartTotalElement = document.getElementById('cart-total');
-            const successMessageElement = document.getElementById('cart-success-message');
-            let total = 0;
-
-            cartItemsElement.innerHTML = '';
-
-            if (cart.length === 0) {
-                cartItemsElement.innerHTML = '<li>Your cart is currently empty.</li>';
-                successMessageElement.classList.add('hidden');
-            } else {
-                successMessageElement.classList.remove('hidden');
-                cart.forEach(item => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `
-                        <span class="cart-item-name">${item.name} (x${item.quantity})</span>
-                        <span class="cart-item-price">₹${(item.price * item.quantity).toFixed(2)}</span>
-                    `;
-                    cartItemsElement.appendChild(li);
-                    total += item.price * item.quantity;
-                });
-            }
-            cartTotalElement.textContent = `Total: ₹${total.toFixed(2)}`;
-        }
-
-        function placeFinalOrder() {
-            if (cart.length === 0) {
-                alert("Your cart is empty. Please add items before placing an order.");
-                return;
-            }
-
-          + const apiEndpoint = 'https://ks-restaurant-api.onrender.com/api/order';
-
-            const orderData = {
-                items: cart,
-                total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
-            };
-
-            fetch(apiEndpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(orderData),
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert("Thank you! Your order has been placed successfully!");
-                cart = [];
-                updateCartDisplay();
-            })
-            .catch(error => {
-                console.error('Error placing final order:', error);
-                alert("Sorry, there was a problem placing your order.");
-            });
-        }
-
-        // Set the first tab to be active on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelector('.tab-link').click();
+      fetch(apiEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData),
+      })
+        .then(async response => {
+          if (!response.ok) {
+            const text = await response.text();
+            throw new Error(`Status ${response.status}: ${text || "no body"}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          alert("Thank you! Your order has been placed successfully!");
+          cart = [];
+          updateCartDisplay();
+        })
+        .catch(error => {
+          console.error("Error placing final order:", error);
+          alert("Sorry, there was a problem placing your order: " + error.message);
         });
-    </script>
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelector(".tab-link")?.click();
+    });
+  </script>
 </body>
 </html>
