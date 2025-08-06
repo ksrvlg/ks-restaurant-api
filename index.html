@@ -1,443 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>K's Tawa V/s Tandoor Junction - Menu</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 20px;
-      max-width: 900px;
-      margin: auto;
-      background: #f4f4f4;
-      color: #333;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #d35400;
-      font-size: 2.2em;
-    }
-    .tabs {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-    .tab-link {
-      padding: 12px 25px;
-      cursor: pointer;
-      background: #fff;
-      border: 1px solid #ddd;
-      margin: 5px;
-      border-radius: 50px;
-      font-weight: 600;
-      transition: background-color 0.3s, color 0.3s, transform 0.2s, box-shadow 0.3s;
-    }
-    .tab-link:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .tab-link.active {
-      background-color: #d35400;
-      color: #fff;
-      border-color: #d35400;
-      box-shadow: 0 4px 8px rgba(211, 84, 0, 0.3);
-    }
-    .tab-content {
-      display: none;
-      animation: fadeIn 0.5s;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .tab-content.active {
-      display: block;
-    }
-    section {
-      margin-bottom: 40px;
-      background: #fff;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-    h2 {
-      border-bottom: 3px solid #d35400;
-      padding-bottom: 10px;
-      margin-bottom: 25px;
-      color: #c0392b;
-      font-size: 1.8em;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 0;
-      border-bottom: 1px dashed #e2e2e2;
-    }
-    li:last-child {
-      border-bottom: none;
-    }
-    .item-details {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      margin-right: 15px;
-    }
-    .item-name {
-      font-weight: 600;
-      font-size: 1.1em;
-      color: #2c3e50;
-    }
-    .item-price {
-      font-weight: 700;
-      color: #c0392b;
-      font-size: 1.1em;
-      margin-top: 5px;
-    }
-    .order-button {
-      background-color: #27ae60;
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background-color 0.3s, transform 0.2s;
-      flex-shrink: 0;
-    }
-    .order-button:hover {
-      background-color: #229954;
-      transform: scale(1.05);
-    }
-    .chef-video-wrapper {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      max-width: 100%;
-      background: #000;
-      margin-top: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .chef-video-wrapper iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 15px;
-      margin-bottom: 25px;
-    }
-    .gallery-item img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .gallery-item img:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-    .lightbox {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.85);
-      justify-content: center;
-      align-items: center;
-      animation: fadeIn 0.3s;
-    }
-    .lightbox-content {
-      max-width: 90%;
-      max-height: 85%;
-      border-radius: 8px;
-    }
-    .close-lightbox {
-      position: absolute;
-      top: 20px;
-      right: 35px;
-      color: #fff;
-      font-size: 45px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .close-lightbox:hover {
-      transform: scale(1.1);
-    }
-    .offer-banner {
-      background: linear-gradient(45deg, #ff8c00, #ffae42);
-      color: white;
-      padding: 15px;
-      border-radius: 10px;
-      text-align: center;
-      margin-bottom: 40px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      animation: flash 2s infinite;
-    }
-    .offer-banner h3 {
-      margin: 0 0 5px 0;
-      font-size: 1.4em;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .offer-banner p {
-      margin: 0;
-      font-size: 1em;
-      font-weight: 500;
-    }
-    @keyframes flash {
-      0% { opacity: 1; }
-      50% { opacity: 0.8; transform: scale(1.02); }
-      100% { opacity: 1; }
-    }
-    footer {
-      text-align: center;
-      padding: 25px;
-      margin-top: 40px;
-      background: linear-gradient(45deg, #c0392b, #d35400);
-      color: #fff;
-      border-radius: 12px;
-      box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
-    }
-    footer p {
-      margin: 8px 0;
-      font-size: 1.1em;
-      font-weight: bold;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    }
-    footer a {
-      color: #fff;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    footer a:hover {
-      color: #f1c40f;
-    }
-    #cart-container {
-      background: #fff;
-      border-radius: 12px;
-      padding: 25px;
-      margin-bottom: 40px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      border: 2px solid #d35400;
-    }
-    #cart-container h2 {
-      text-align: center;
-      margin-top: 0;
-      color: #c0392b;
-    }
-    #cart-items {
-      list-style: none;
-      padding: 0;
-      margin-bottom: 20px;
-    }
-    #cart-items li {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 5px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    .cart-item-name {
-      font-weight: 600;
-    }
-    .cart-item-price {
-      color: #c0392b;
-    }
-    #cart-total {
-      font-size: 1.4em;
-      font-weight: bold;
-      text-align: right;
-      margin-bottom: 20px;
-      color: #2c3e50;
-    }
-    #place-order-button {
-      display: block;
-      width: 100%;
-      padding: 15px;
-      background-color: #d35400;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 1.2em;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    #place-order-button:hover {
-      background-color: #c0392b;
-    }
-    #cart-success-message {
-      background-color: #e8f5e9;
-      color: #2e7d32;
-      padding: 12px;
-      border-radius: 8px;
-      text-align: center;
-      font-weight: 500;
-      margin-bottom: 15px;
-      border: 1px solid #a5d6a7;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Kitchen Orders - K's Tawa</title>
+    <style>
+        /* All styles are the same as before, but with additions for the new button */
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
+        h1 { color: #333; text-align: center; }
+        #orders-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; align-items: flex-start; }
+        .order-card { background-color: #fff; border-left: 10px solid #d35400; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 320px; padding: 15px; display: flex; flex-direction: column; margin-bottom: 20px; }
+        .order-card h2 { margin: 0 0 10px; font-size: 1.4em; color: #333; }
+        .order-card p { margin: 0 0 5px; color: #555; }
+        .order-card ul { list-style-type: none; padding-left: 0; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px; flex-grow: 1; font-size: 1.1em; }
+        .order-card li { margin-bottom: 5px; }
+        .order-card .total { font-weight: bold; margin-top: 15px; font-size: 1.2em; text-align: right; color: #000; }
+        /* Style for the new button */
+        .complete-button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .complete-button:hover { background-color: #2ecc71; }
+    </style>
 </head>
 <body>
-  <h1>K's Tawa V/s Tandoor Junction</h1>
 
-  <div id="cart-container">
-    <h2>Your Cart</h2>
-    <div id="cart-success-message" class="hidden">
-      Great! Now just review your order and press "Place Full Order" below.
+    <h1>K's Tawa - Live Kitchen Orders</h1>
+    <div id="orders-container">
+        <!-- New orders will appear here automatically -->
     </div>
-    <ul id="cart-items">
-      <li>Your cart is currently empty.</li>
-    </ul>
-    <div id="cart-total">Total: ₹0</div>
-    <button id="place-order-button" onclick="placeFinalOrder()">Place Full Order</button>
-  </div>
 
-  <div class="tabs">
-    <div class="tab-link active" onclick="openTab(event, 'starters')">Starters & Platters</div>
-    <div class="tab-link" onclick="openTab(event, 'main_course')">Main Course</div>
-    <div class="tab-link" onclick="openTab(event, 'rolls_pasta')">Rolls & Pasta</div>
-    <div class="tab-link" onclick="openTab(event, 'chinese')">Chinese</div>
-    <div class="tab-link" onclick="openTab(event, 'breads_biryani')">Breads & Biryani</div>
-    <div class="tab-link" onclick="openTab(event, 'sides_drinks')">Sides & Drinks</div>
-  </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const firebaseConfig = {
+                apiKey: "AIzaSyBLTf-OKsjx_FkutqCZG4i7cuOyNs8KnEg",
+                authDomain: "kstawa-orders.firebaseapp.com",
+                databaseURL: "https://kstawa-orders-default-rtdb.firebaseio.com/",
+                projectId: "kstawa-orders",
+                storageBucket: "kstawa-orders.appspot.com",
+                messagingSenderId: "900080804935",
+                appId: "1:900080804935:web:113fe83a084de2d73a7d62"
+            };
 
-  <!-- (omitted long menu sections for brevity in this snippet; assume they remain unchanged) -->
+            firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
+            const ordersRef = database.ref('orders');
 
-  <!-- Lightbox for Image Gallery -->
-  <div class="lightbox" id="lightbox">
-    <span class="close-lightbox" onclick="closeLightbox()">×</span>
-    <img class="lightbox-content" id="lightbox-img" />
-  </div>
+            // --- FEATURE 1: ADD NOTIFICATION SOUND ---
+            const notificationSound = new Audio('https://cdn.freesound.org/previews/219/219244_4032776-lq.mp3');
 
-  <footer>
-    <p>📍 Address: Ramphal Chowk Rd, near Nukkad Cafe, Block C, Sector 7 Dwarka, Palam, New Delhi, Delhi, 110075</p>
-    <p>📞 Phone: <a href="tel:07678654713">076786 54713</a></p>
-  </footer>
+            // Listen for new orders being added
+            ordersRef.on('child_added', (snapshot) => {
+                const orderId = snapshot.key;
+                const orderData = snapshot.val();
+                if (document.getElementById(orderId)) return;
+                
+                createOrderCard(orderId, orderData);
+                
+                // Play the sound
+                notificationSound.play().catch(e => console.warn("Sound blocked by browser. Click page to enable."));
+            });
+            
+            // --- FEATURE 2: LISTEN FOR WHEN ORDERS ARE REMOVED ---
+            ordersRef.on('child_removed', (snapshot) => {
+                const orderId = snapshot.key;
+                const cardToRemove = document.getElementById(orderId);
+                if (cardToRemove) {
+                    cardToRemove.remove(); // Remove the HTML card from the screen
+                }
+            });
 
-  <script>
-    let cart = [];
+            function createOrderCard(orderId, data) {
+                const container = document.getElementById('orders-container');
+                const card = document.createElement('div');
+                card.className = 'order-card';
+                card.id = orderId;
 
-    function openTab(event, tabName) {
-      let tabcontent = document.getElementsByClassName("tab-content");
-      for (let i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-      }
-      let tablinks = document.getElementsByClassName("tab-link");
-      for (let i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-      }
-      document.getElementById(tabName)?.style.display = "block";
-      event.currentTarget.className += " active";
-    }
+                let itemsHtml = '<ul>';
+                data.items.forEach(item => {
+                    // Assuming item is a string like "Paneer Tikka (Half)"
+                    itemsHtml += `<li>${item.name}</li>`;
+                });
+                itemsHtml += '</ul>';
 
-    function openLightbox(src) {
-      const lightbox = document.getElementById("lightbox");
-      document.getElementById("lightbox-img").src = src;
-      lightbox.style.display = "flex";
-    }
-
-    function closeLightbox() {
-      document.getElementById("lightbox").style.display = "none";
-    }
-
-    document.getElementById("lightbox")?.addEventListener("click", function (event) {
-      if (event.target.id === "lightbox") closeLightbox();
-    });
-
-    function addToCart(button) {
-      const name = button.getAttribute("data-name");
-      const price = parseFloat(button.getAttribute("data-price"));
-      const existing = cart.find(i => i.name === name);
-      if (existing) existing.quantity++;
-      else cart.push({ name, price, quantity: 1 });
-      updateCartDisplay();
-    }
-
-    function updateCartDisplay() {
-      const cartItemsElement = document.getElementById("cart-items");
-      const cartTotalElement = document.getElementById("cart-total");
-      const successMessageElement = document.getElementById("cart-success-message");
-      let total = 0;
-      cartItemsElement.innerHTML = "";
-      if (cart.length === 0) {
-        cartItemsElement.innerHTML = "<li>Your cart is currently empty.</li>";
-        successMessageElement.classList.add("hidden");
-      } else {
-        successMessageElement.classList.remove("hidden");
-        cart.forEach(item => {
-          const li = document.createElement("li");
-          li.innerHTML = `
-            <span class="cart-item-name">${item.name} (x${item.quantity})</span>
-            <span class="cart-item-price">₹${(item.price * item.quantity).toFixed(2)}</span>
-          `;
-          cartItemsElement.appendChild(li);
-          total += item.price * item.quantity;
+                card.innerHTML = `
+                    <h2>${data.name}</h2>
+                    <p><strong>Phone:</strong> ${data.phone}</p>
+                    <p><strong>Time:</strong> ${new Date(data.timestamp).toLocaleTimeString('en-IN')}</p>
+                    ${itemsHtml}
+                    <div class="total">Total: ₹${data.totalAmount.toFixed(2)}</div>
+                    
+                    <!-- This button triggers the completion/removal -->
+                    <button class="complete-button" onclick="completeOrder('${orderId}')">Mark as Complete</button>
+                `;
+                container.prepend(card);
+            }
+            
+            // --- FEATURE 3: FUNCTION TO COMPLETE (DELETE) THE ORDER ---
+            window.completeOrder = function(orderId) {
+                if (confirm('Are you sure you want to mark this order as complete?')) {
+                    // This removes the order from Firebase, which triggers the 'child_removed' listener above.
+                    ordersRef.child(orderId).remove();
+                }
+            }
         });
-      }
-      cartTotalElement.textContent = `Total: ₹${total.toFixed(2)}`;
-    }
-
-    function placeFinalOrder() {
-      if (cart.length === 0) {
-        alert("Your cart is empty. Please add items before placing an order.");
-        return;
-      }
-
-      const apiEndpoint = "https://ks-restaurant-api.onrender.com/api/order";
-      const orderData = {
-        items: cart,
-        total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
-      };
-
-      fetch(apiEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderData),
-      })
-        .then(async response => {
-          if (!response.ok) {
-            const text = await response.text();
-            throw new Error(`Status ${response.status}: ${text || "no body"}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          alert("Thank you! Your order has been placed successfully!");
-          cart = [];
-          updateCartDisplay();
-        })
-        .catch(error => {
-          console.error("Error placing final order:", error);
-          alert("Sorry, there was a problem placing your order: " + error.message);
-        });
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      document.querySelector(".tab-link")?.click();
-    });
-  </script>
+    </script>
 </body>
 </html>
