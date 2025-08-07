@@ -59,7 +59,7 @@
             // --- FEATURE 1: ADD NOTIFICATION SOUND ---
             const notificationSound = new Audio('https://cdn.freesound.org/previews/219/219244_4032776-lq.mp3');
 
-            // Listen for new orders being added
+                        // Listen for new orders being added
             ordersRef.on('child_added', (snapshot) => {
                 const orderId = snapshot.key;
                 const orderData = snapshot.val();
@@ -67,10 +67,24 @@
                 
                 createOrderCard(orderId, orderData);
                 
-                // Play the sound
-                notificationSound.play().catch(e => console.warn("Sound blocked by browser. Click page to enable."));
+                // --- NEW: Play sound twice ---
+                // Function to play sound and handle browser permissions
+                const playSound = () => {
+                    notificationSound.play().catch(e => {
+                        console.warn("Sound blocked by browser. A user interaction (click/tap) is required to enable audio.");
+                        // Attempt to resume audio context after a user interaction
+                        document.body.addEventListener('click', () => notificationSound.play(), { once: true });
+                    });
+                };
+
+                // Play it the first time
+                playSound();
+                
+                // Wait a moment and play it a second time
+                setTimeout(() => {
+                    playSound();
+                }, 1200); // 1.2 second delay between sounds
             });
-            
             // --- FEATURE 2: LISTEN FOR WHEN ORDERS ARE REMOVED ---
             ordersRef.on('child_removed', (snapshot) => {
                 const orderId = snapshot.key;
