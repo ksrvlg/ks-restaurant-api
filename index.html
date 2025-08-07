@@ -7,103 +7,101 @@
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
         h1 { color: #333; text-align: center; }
-        
-        #start-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-        #start-button {
-            padding: 20px 40px;
-            font-size: 1.5em;
-            font-weight: bold;
-            color: white;
-            background-color: #27ae60;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
+        #start-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 2000; }
+        #start-button { padding: 20px 40px; font-size: 1.5em; font-weight: bold; color: white; background-color: #27ae60; border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         #orders-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; align-items: flex-start; }
         .order-card { background-color: #fff; border-left: 10px solid #d35400; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 320px; padding: 15px; display: flex; flex-direction: column; margin-bottom: 20px; }
         .order-card h2 { margin: 0 0 10px; font-size: 1.4em; color: #333; }
         .order-card p { margin: 0 0 5px; color: #555; word-wrap: break-word; }
         .order-card ul { list-style-type: none; padding-left: 0; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px; flex-grow: 1; font-size: 1.1em; }
-        .order-card li { margin-bottom: 5px; }
-        .order-card .total { font-weight: bold; margin-top: 15px; font-size: 1.2em; text-align: right; color: #000; }
         .complete-button { background-color: #27ae60; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; margin-top: 15px; font-size: 1em; font-weight: bold; }
     </style>
 </head>
 <body>
-
-    <div id="start-screen">
-        <button id="start-button">Start Receiving Orders</button>
-    </div>
-
+    <div id="start-screen"><button id="start-button">Start Receiving Orders</button></div>
     <h1>K's Tawa - Live Kitchen Orders</h1>
     <div id="orders-container"></div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script>
+        console.log("DEBUG: Page loaded. Script is starting.");
+        
         const startScreen = document.getElementById('start-screen');
         const startButton = document.getElementById('start-button');
         const notificationSound = new Audio('https://cdn.freesound.org/previews/219/219244_4032776-lq.mp3');
-        let firebaseApp; // To ensure Firebase doesn't initialize twice
+        let firebaseApp;
 
         function initializeOrderSystem() {
+            console.log("DEBUG: initializeOrderSystem() function called.");
+            
             startScreen.style.display = 'none';
+            console.log("DEBUG: Start screen hidden.");
 
-            if (firebase.apps.length === 0) {
-                const firebaseConfig = {
-                    apiKey: "AIzaSyBLTf-OKsjx_FkutqCZG4i7cuOyNs8KnEg",
-                    authDomain: "kstawa-orders.firebaseapp.com",
-                    databaseURL: "https://kstawa-orders-default-rtdb.firebaseio.com/",
-                    projectId: "kstawa-orders",
-                    storageBucket: "kstawa-orders.appspot.com",
-                    messagingSenderId: "900080804935",
-                    appId: "1:900080804935:web:113fe83a084de2d73a7d62"
-                };
-                firebaseApp = firebase.initializeApp(firebaseConfig);
+            try {
+                if (firebase.apps.length === 0) {
+                    const firebaseConfig = {
+                        apiKey: "AIzaSyBLTf-OKsjx_FkutqCZG4i7cuOyNs8KnEg",
+                        authDomain: "kstawa-orders.firebaseapp.com",
+                        databaseURL: "https://kstawa-orders-default-rtdb.firebaseio.com/",
+                        projectId: "kstawa-orders",
+                        storageBucket: "kstawa-orders.appspot.com",
+                        messagingSenderId: "900080804935",
+                        appId: "1:900080804935:web:113fe83a084de2d73a7d62"
+                    };
+                    firebaseApp = firebase.initializeApp(firebaseConfig);
+                    console.log("DEBUG: Firebase initialized successfully.");
+                } else {
+                    console.log("DEBUG: Firebase was already initialized.");
+                }
+            } catch (error) {
+                console.error("DEBUG: CRITICAL ERROR during Firebase initialization:", error);
+                return; // Stop if Firebase fails
             }
             
             const database = firebase.database();
             const ordersRef = database.ref('orders');
+            console.log("DEBUG: Firebase reference to 'orders' created.");
 
             ordersRef.on('child_added', (snapshot) => {
+                console.log("%cDEBUG: New child detected in Firebase!", "color: green; font-weight: bold;");
+                
+                // Play sound in a separate, safe block
+                try {
+                    notificationSound.play();
+                    setTimeout(() => notificationSound.play(), 1200);
+                } catch(e) {
+                    console.warn("DEBUG: Sound playback failed, but continuing script.", e);
+                }
+
                 const orderId = snapshot.key; 
                 const orderData = snapshot.val();
                 if (document.getElementById(orderId)) return;
                 
                 createOrderCard(orderId, orderData);
-                
-                notificationSound.play().catch(e => console.warn(e));
-                setTimeout(() => notificationSound.play().catch(e => console.warn(e)), 1200); 
             });
             
             ordersRef.on('child_removed', (snapshot) => {
                 const cardToRemove = document.getElementById(snapshot.key);
                 if (cardToRemove) cardToRemove.remove();
             });
+            
+            console.log("DEBUG: Firebase listeners are now active.");
         }
 
         startButton.addEventListener('click', () => {
-            notificationSound.muted = true;
-            notificationSound.play().catch(e => {});
-            notificationSound.muted = false;
+            console.log("DEBUG: Start button clicked.");
             initializeOrderSystem();
         }, { once: true });
 
         function createOrderCard(orderId, data) {
+            console.log("DEBUG: createOrderCard() called for order:", orderId);
             const container = document.getElementById('orders-container');
+            if(!container) {
+                console.error("DEBUG: CRITICAL ERROR - orders-container not found!");
+                return;
+            }
+
             const card = document.createElement('div');
             card.className = 'order-card';
             card.id = orderId;
@@ -113,15 +111,9 @@
             
             const addressHtml = data.address ? `<p><strong>Address:</strong> ${data.address}</p>` : '';
 
-            card.innerHTML = `
-                <h2>${data.name || 'Unknown'}</h2>
-                <p><strong>Phone:</strong> ${data.phone || 'N/A'}</p>
-                ${addressHtml}
-                <p><strong>Time:</strong> ${new Date(data.timestamp).toLocaleTimeString('en-IN')}</p>
-                ${itemsHtml}
-                <div class="total">Total: ₹${(data.totalAmount || 0).toFixed(2)}</div>
-                <button class="complete-button" onclick="completeOrder('${orderId}')">Mark as Complete</button>`;
+            card.innerHTML = `<h2>${data.name || 'Unknown'}</h2><p><strong>Phone:</strong> ${data.phone || 'N/A'}</p>${addressHtml}<p><strong>Time:</strong> ${new Date(data.timestamp).toLocaleTimeString('en-IN')}</p>${itemsHtml}<div class="total">Total: ₹${(data.totalAmount || 0).toFixed(2)}</div><button class="complete-button" onclick="completeOrder('${orderId}')">Mark as Complete</button>`;
             container.prepend(card);
+            console.log("DEBUG: Order card successfully added to the page.");
         }
             
         window.completeOrder = function(orderId) {
