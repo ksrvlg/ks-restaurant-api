@@ -5,9 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Kitchen Orders - K's Tawa</title>
     <style>
-        /* All styles are the same as before, but with additions for the new button */
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
         h1 { color: #333; text-align: center; }
+        
+        /* --- NEW: Styles for the Start Screen --- */
+        #start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        #start-button {
+            padding: 20px 40px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: white;
+            background-color: #27ae60;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* --- Original Styles --- */
         #orders-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; align-items: flex-start; }
         .order-card { background-color: #fff; border-left: 10px solid #d35400; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 320px; padding: 15px; display: flex; flex-direction: column; margin-bottom: 20px; }
         .order-card h2 { margin: 0 0 10px; font-size: 1.4em; color: #333; }
@@ -15,33 +41,32 @@
         .order-card ul { list-style-type: none; padding-left: 0; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px; flex-grow: 1; font-size: 1.1em; }
         .order-card li { margin-bottom: 5px; }
         .order-card .total { font-weight: bold; margin-top: 15px; font-size: 1.2em; text-align: right; color: #000; }
-        /* Style for the new button */
-        .complete-button {
-            background-color: #27ae60;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 15px;
-            font-size: 1em;
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-        .complete-button:hover { background-color: #2ecc71; }
+        .complete-button { background-color: #27ae60; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; margin-top: 15px; font-size: 1em; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <h1>K's Tawa - Live Kitchen Orders</h1>
-    <div id="orders-container">
-        <!-- New orders will appear here automatically -->
+    <!-- NEW: The Start Screen overlay -->
+    <div id="start-screen">
+        <button id="start-button">Start Receiving Orders</button>
     </div>
+
+    <h1>K's Tawa - Live Kitchen Orders</h1>
+    <div id="orders-container"></div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        const startScreen = document.getElementById('start-screen');
+        const startButton = document.getElementById('start-button');
+        const notificationSound = new Audio('https://cdn.freesound.org/previews/219/219244_4032776-lq.mp3');
+
+        // This function connects to Firebase and starts listening for orders
+        function initializeOrderSystem() {
+            // Hide the start screen
+            startScreen.style.display = 'none';
+
+            // --- The rest of your script is now inside this function ---
             const firebaseConfig = {
                 apiKey: "AIzaSyBLTf-OKsjx_FkutqCZG4i7cuOyNs8KnEg",
                 authDomain: "kstawa-orders.firebaseapp.com",
@@ -56,10 +81,6 @@
             const database = firebase.database();
             const ordersRef = database.ref('orders');
 
-            // --- FEATURE 1: ADD NOTIFICATION SOUND ---
-            const notificationSound = new Audio('https://cdn.freesound.org/previews/219/219244_4032776-lq.mp3');
-
-                        // Listen for new orders being added
             ordersRef.on('child_added', (snapshot) => {
                 const orderId = snapshot.key;
                 const orderData = snapshot.val();
@@ -67,67 +88,52 @@
                 
                 createOrderCard(orderId, orderData);
                 
-                // --- NEW: Play sound twice ---
-                // Function to play sound and handle browser permissions
-                const playSound = () => {
-                    notificationSound.play().catch(e => {
-                        console.warn("Sound blocked by browser. A user interaction (click/tap) is required to enable audio.");
-                        // Attempt to resume audio context after a user interaction
-                        document.body.addEventListener('click', () => notificationSound.play(), { once: true });
-                    });
-                };
-
-                // Play it the first time
-                playSound();
-                
-                // Wait a moment and play it a second time
-                setTimeout(() => {
-                    playSound();
-                }, 1200); // 1.2 second delay between sounds
+                // Play sound twice (this will now work)
+                notificationSound.play();
+                setTimeout(() => notificationSound.play(), 1200); 
             });
-            // --- FEATURE 2: LISTEN FOR WHEN ORDERS ARE REMOVED ---
+            
             ordersRef.on('child_removed', (snapshot) => {
                 const orderId = snapshot.key;
                 const cardToRemove = document.getElementById(orderId);
                 if (cardToRemove) {
-                    cardToRemove.remove(); // Remove the HTML card from the screen
+                    cardToRemove.remove();
                 }
             });
 
-            function createOrderCard(orderId, data) {
-                const container = document.getElementById('orders-container');
-                const card = document.createElement('div');
-                card.className = 'order-card';
-                card.id = orderId;
+            // ... The createOrderCard and completeOrder functions are unchanged ...
+        }
 
-                let itemsHtml = '<ul>';
-                data.items.forEach(item => {
-                    // Assuming item is a string like "Paneer Tikka (Half)"
-                    itemsHtml += `<li>${item.name}</li>`;
-                });
-                itemsHtml += '</ul>';
+        // --- NEW: Event listener for the start button ---
+        startButton.addEventListener('click', () => {
+            // Try to play a silent sound to "unlock" audio permissions
+            notificationSound.muted = true;
+            notificationSound.play().catch(e => {});
+            notificationSound.muted = false;
 
-                card.innerHTML = `
-                    <h2>${data.name}</h2>
-                    <p><strong>Phone:</strong> ${data.phone}</p>
-                    <p><strong>Time:</strong> ${new Date(data.timestamp).toLocaleTimeString('en-IN')}</p>
-                    ${itemsHtml}
-                    <div class="total">Total: ₹${data.totalAmount.toFixed(2)}</div>
-                    
-                    <!-- This button triggers the completion/removal -->
-                    <button class="complete-button" onclick="completeOrder('${orderId}')">Mark as Complete</button>
-                `;
-                container.prepend(card);
-            }
+            // Initialize the main system
+            initializeOrderSystem();
+        }, { once: true }); // This event listener will only ever run once
+
+        // These two functions need to be defined outside so they are accessible by the `onclick` attribute
+        function createOrderCard(orderId, data) {
+            const container = document.getElementById('orders-container');
+            const card = document.createElement('div');
+            card.className = 'order-card';
+            card.id = orderId;
+            let itemsHtml = '<ul>';
+            data.items.forEach(item => { itemsHtml += `<li>${item.name}</li>`; });
+            itemsHtml += '</ul>';
+            card.innerHTML = `<h2>${data.name}</h2><p><strong>Phone:</strong> ${data.phone}</p><p><strong>Time:</strong> ${new Date(data.timestamp).toLocaleTimeString('en-IN')}</p>${itemsHtml}<div class="total">Total: ₹${data.totalAmount.toFixed(2)}</div><button class="complete-button" onclick="completeOrder('${orderId}')">Mark as Complete</button>`;
+            container.prepend(card);
+        }
             
-            // --- FEATURE 3: FUNCTION TO COMPLETE (DELETE) THE ORDER ---
-            window.completeOrder = function(orderId) {
-                if (confirm('Are you sure you want to mark this order as complete?')) {
-                    // This removes the order from Firebase, which triggers the 'child_removed' listener above.
-                    ordersRef.child(orderId).remove();
-                }
+        window.completeOrder = function(orderId) {
+            if (confirm('Are you sure you want to mark this order as complete?')) {
+                // We need to re-access the database reference here
+                firebase.database().ref('orders').child(orderId).remove();
             }
-        });
+        }
     </script>
 </body>
 </html>
