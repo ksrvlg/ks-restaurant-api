@@ -14,7 +14,8 @@
         .order-card h2 { margin: 0 0 10px; font-size: 1.4em; color: #333; }
         .order-card p { margin: 0 0 5px; color: #555; word-wrap: break-word; }
         .order-card ul { list-style-type: none; padding-left: 0; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px; flex-grow: 1; font-size: 1.1em; }
-        .complete-button { background-color: #27ae60; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; margin-top: 15px; font-size: 1em; font-weight: bold; }
+        .order-card .total { margin-top: 10px; font-weight: bold; font-size: 1.2em; text-align: right; }
+        .complete-button { background-color: #27ae60; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; margin-top: 15px; font-size: 1em; font-weight: bold; width: 100%; }
     </style>
 </head>
 <body>
@@ -52,11 +53,12 @@
                     firebaseApp = firebase.initializeApp(firebaseConfig);
                     console.log("DEBUG: Firebase initialized successfully.");
                 } else {
+                    firebaseApp = firebase.app(); // Get the already initialized app
                     console.log("DEBUG: Firebase was already initialized.");
                 }
             } catch (error) {
                 console.error("DEBUG: CRITICAL ERROR during Firebase initialization:", error);
-                return; // Stop if Firebase fails
+                return;
             }
             
             const database = firebase.database();
@@ -66,10 +68,9 @@
             ordersRef.on('child_added', (snapshot) => {
                 console.log("%cDEBUG: New child detected in Firebase!", "color: green; font-weight: bold;");
                 
-                // Play sound in a separate, safe block
                 try {
-                    notificationSound.play();
-                    setTimeout(() => notificationSound.play(), 1200);
+                    notificationSound.play().catch(e => console.warn("Could not play notification sound:", e));
+                    setTimeout(() => notificationSound.play().catch(e => console.warn("Could not play notification sound:", e)), 1200);
                 } catch(e) {
                     console.warn("DEBUG: Sound playback failed, but continuing script.", e);
                 }
@@ -105,14 +106,34 @@
             const card = document.createElement('div');
             card.className = 'order-card';
             card.id = orderId;
-            let itemsHtml = '<ul>';
-            (data.items || []).forEach(item => { itemsHtml += `<li>${item.name}</li>`; });
-            itemsHtml += '</ul>';
-            
-            const addressHtml = data.address ? `<p><strong>Address:</strong> ${data.address}</p>` : '';
 
-            card.innerHTML = `<h2>${data.name || 'Unknown'}</h2><p><strong>Phone:</strong> ${data.phone || 'N/A'}</p>${addressHtml}<p><strong>Time:</strong> ${new Date(data.timestamp).toLocaleTimeString('en-IN')}</p>${itemsHtml}<div class="total">Total: ₹${(data.totalAmount || 0).toFixed(2)}</div><button class="complete-button" onclick="completeOrder('${orderId}')">Mark as Complete</button>`;
-            container.prepend(card);
+            // =========================================================================
+            // FIX #1: Correctly parse the items string into a list
+            // =========================================================================
+            let itemsHtml = '<ul>';
+            if (typeof data.items === 'string' && data.items.length > 0) {
+              const itemsArray = data.items.split('\n'); // Split the string into an array of lines
+              itemsArray.forEach(itemString => {
+                if (itemString) { // Make sure the line is not empty
+                    itemsHtml += `<li>${itemString}</li>`; // Create a list item for each string
+                }
+              });
+            }
+            itemsHtml += '</ul>';
+            // =========================================================================
+            
+            // FIX #2: Display the pre-formatted total amount string directly
+            const totalHtml = `<div class="total">Total: ${data.totalAmount || '₹0.00'}</div>`;
+
+            card.innerHTML = `
+                <h2>${data.name || 'Unknown'}</h2>
+                <p><strong>Phone:</strong> ${data.phone || 'N/A'}</p>
+                <p><strong>Time:</strong> ${new Date(data.timestamp).toLocaleTimeString('en-IN')}</p>
+                ${itemsHtml}
+                ${totalHtml}
+                <button class="complete-button" onclick="completeOrder('${orderId}')">Mark as Complete</button>
+            `;
+            container.prepend(card); // Prepend to show newest orders at the top
             console.log("DEBUG: Order card successfully added to the page.");
         }
             
